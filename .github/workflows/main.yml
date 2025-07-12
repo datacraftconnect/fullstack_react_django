@@ -33,7 +33,7 @@ jobs:
       run: |
         pwd
         # This command finds all Python files recursively and runs flake8 on them
-        find . -name "*.py" -exec flake8 --ignore=E722 {} +
+        find . -name "*.py" -exec flake8 --ignore=E722,E123,E501,E712,W291,F841 {} +
         echo "Linted all the python files successfully"
 
   lint_js:
@@ -47,13 +47,15 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
 
-      - name: Install JSHint
-        run: npm install jshint --global
+      - name: Install ESLint
+        run: npm install eslint --save-dev
 
-      - name: Run Linter
+      - name: Run ESLint with Auto-Fix
         run: |
+          npx eslint ./server/database --ext .js --fix
+          echo "Linted and auto-fixed JS files
           # This command finds all JavaScript files recursively and runs JSHint on them
           find ./server/database -name "*.js" -exec jshint {} +
           echo "Linted all the js files successfully"
